@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}VIP Dostop{% endblock %}
+
+{% block content %}
+<h2>Postani VIP član!</h2>
+<p>Z nakupom VIP karte dobiš dostop do ekskluzivnih funkcij, vključno z Leaderboard-om.</p>
+
+<form action="{{ url_for('buy_vip') }}" method="post">
+    <button type="submit" class="vip-button">Kupi VIP karto</button>
+</form>
+
+<style>
+    .vip-button {
+        background-color: gold;
+        color: black;
+        font-size: 18px;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-top: 10px;
+    }
+    .vip-button:hover {
+        background-color: orange;
+    }
+</style>
+
+{% endblock %}

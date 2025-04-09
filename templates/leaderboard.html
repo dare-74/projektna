@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Leaderboard - Ulovi</h2>
+
+<!-- Obrazec za dodajanje ulova -->
+<form action="{{ url_for('leaderboard') }}" method="POST" enctype="multipart/form-data">
+    <label>Ime ribe:</label>
+    <input type="text" name="fish_name" required>
+    
+    <label>Kilogrami:</label>
+    <input type="number" step="0.01" name="weight" required>
+
+    <label>Dolžina (cm):</label>
+    <input type="number" step="0.1" name="length" required>
+
+    <label>Slika:</label>
+    <input type="file" name="image" accept="image/*">
+
+    <label>Komentar:</label>
+    <textarea name="comment"></textarea>
+
+    <button type="submit">Dodaj ulov</button>
+</form>
+
+<!-- Prikaz ulovov -->
+<div>
+    {% for catch in catches %}
+    <div style="border: 1px solid black; padding: 10px; margin: 10px;">
+        <h3>{{ catch.fish_name }}</h3>
+        <p>Kilogrami: {{ catch.weight }} kg</p>
+        <p>Dolžina: {{ catch.length }} cm</p>
+        {% if catch.image_filename %}
+            <img src="{{ url_for('static', filename='uploads/' + catch.image_filename) }}" width="200">
+        {% endif %}
+        <p>Komentar: {{ catch.comment }}</p>
+        <p>Uporabnik: {{ catch.user.username }}</p>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

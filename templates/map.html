@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+{% block title %}Zemljevid{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0"><i class="fa-solid fa-map"></i> Ribolovne lokacije</h2>
+        </div>
+        <div class="card-body">
+            <div id="map" style="width: 100%; height: 600px; border-radius: 10px;"></div>
+            <button class="btn btn-success mt-3" onclick="loadFishingSpots()">
+                <i class="fa-solid fa-refresh"></i> Osveži lokacije
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast obvestila -->
+<div id="toast" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+    <div class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                Lokacija uspešno dodana!
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    var map = L.map('map').setView([46.1512, 14.9955], 8); // Središče Slovenije
+
+    // Dodaj OpenStreetMap sloj
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    function loadFishingSpots() {
+        fetch("{{ url_for('fishing_spots') }}")
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(spot => {
+                    var marker = L.marker([spot.latitude, spot.longitude], { 
+                        riseOnHover: true,
+                        title: spot.name
+                    }).addTo(map)
+                      .bindPopup(`<b>${spot.name}</b><br>${spot.description}`)
+                      .openPopup();
+                    
+                    // Animacija markerja (utripanje)
+                    marker.on('mouseover', function () {
+                        this.setOpacity(0.5);
+                    });
+                    marker.on('mouseout', function () {
+                        this.setOpacity(1);
+                    });
+                });
+            })
+            .catch(error => console.error("Napaka pri pridobivanju podatkov:", error));
+    }
+
+    loadFishingSpots();
+
+    // Dodajanje nove lokacije s klikom na zemljevid
+    map.on('click', function(event) {
+        var name = prompt("Vnesite ime lokacije:");
+        if (name) {
+            fetch("{{ url_for('fishing_spots') }}", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: name,
+                    latitude: event.latlng.lat,
+                    longitude: event.latlng.lng,
+                    description: "Nova ribolovna točka"
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                showToast();
+                loadFishingSpots();
+            })
+            .catch(error => console.error("Napaka pri dodajanju točke:", error));
+        }
+    });
+
+    function showToast() {
+        var toastEl = document.querySelector('.toast');
+        var toast = new bootstrap.Toast(toastEl);
+        toast.show();
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block title %}Prijava{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center mt-4">
+    <div class="card p-4 shadow-lg" style="width: 350px;">
+        <h2 class="text-center"><i class="fa-solid fa-sign-in-alt"></i> Prijava</h2>
+        <form method="post">
+            <div class="mb-3">
+                <label class="form-label">Uporabniško ime:</label>
+                <input type="text" name="username" class="form-control" placeholder="Vnesite uporabniško ime" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Geslo:</label>
+                <input type="password" name="password" class="form-control" placeholder="Vnesite geslo" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i> Prijava
+            </button>
+        </form>
+        <p class="text-center mt-3">Nimate računa? <a href="{{ url_for('register') }}">Registrirajte se</a></p>
+    </div>
+</div>
+{% endblock %}
