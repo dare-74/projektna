@@ -107,7 +107,7 @@ def map_view():
 def fishing_spots():
     if request.method == 'POST':
         if 'user_id' not in session:
-            return jsonify({'message': 'Potrebna je prijava!'}), 403
+            return jsonify({'message': 'Potrebna je prijava!'}),
 
         data = request.json
         new_spot = FishingSpot(
@@ -118,7 +118,7 @@ def fishing_spots():
         )
         db.session.add(new_spot)
         db.session.commit()
-        return jsonify({'message': 'Ribolovna lokacija dodana!'}), 201
+        return jsonify({'message': 'Ribolovna lokacija dodana!'}),
     
     spots = FishingSpot.query.all()
     return jsonify([{'id': s.id, 'name': s.name, 'latitude': s.latitude, 'longitude': s.longitude, 'description': s.description} for s in spots])
@@ -126,10 +126,10 @@ def fishing_spots():
 @app.route('/add_spot', methods=['POST'])
 def add_spot():
     if 'user_id' not in session:
-        return jsonify({'message': 'Potrebna je prijava!'}), 403
+        return jsonify({'message': 'Potrebna je prijava!'}),
 
     if not request.json:
-        return jsonify({'message': 'Neveljavni podatki'}), 400
+        return jsonify({'message': 'Neveljavni podatki'}),
 
     data = request.json
     new_spot = FishingSpot(
