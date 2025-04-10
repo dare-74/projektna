@@ -156,4 +156,4 @@ def buy_vip():
         session['is_vip'] = True
         return redirect(url_for('leaderboard'))
 
-    return "Napaka: Uporabnik ne obstaja", 400
+    return "Napaka: Uporabnik ne obstaja",
